@@ -1,0 +1,22 @@
+{
+  "name": "test-site-next",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@contentful/rich-text-react-renderer": "^16.1.6",
+    "@contentful/rich-text-types": "^17.2.5",
+    "contentful": "^11.10.5",
+    "contentful-management": "^11.73.1",
+    "next": "^15.5.12",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "dotenv": "^17.3.1"
+  }
+}
