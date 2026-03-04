@@ -1,4 +1,7 @@
 import { getSiteInfo, getProjects, getWorkImages } from "@/lib/contentful";
+
+// Revalidate from Contentful every 60 seconds (ISR)
+export const revalidate = 60;
 import OrbAvatar from "@/components/OrbAvatar";
 import WorkSection from "@/components/WorkSection";
 import ImageCard from "@/components/ImageCard";
