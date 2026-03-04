@@ -46,6 +46,7 @@ async function run() {
         { id: "title", name: "Title", type: "Symbol", required: true },
         { id: "bio", name: "Bio", type: "RichText", required: false },
         { id: "availabilityStatus", name: "Availability Status", type: "Symbol", required: false },
+        { id: "availabilityColor", name: "Availability Color", type: "Symbol", required: false, validations: [{ in: ["green", "amber"] }] },
         { id: "location", name: "Location", type: "Symbol", required: false },
         { id: "email", name: "Email", type: "Symbol", required: false },
         { id: "twitterUrl", name: "Twitter URL", type: "Symbol", required: false },

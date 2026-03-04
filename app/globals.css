@@ -251,6 +251,14 @@ button { font: inherit; cursor: pointer; }
   overflow: visible;
 }
 
+.availability-dot.amber {
+  background: #f59e0b;
+}
+
+.availability-dot.amber::after {
+  background: #f59e0b;
+}
+
 .availability-dot::after {
   content: "";
   z-index: -1;

@@ -127,7 +127,7 @@ export default async function HomePage() {
             </button>
 
             <div className="home-meta animate-in" style={{ "--delay": "0.25s" }}>
-              <span className="availability-dot" />
+              <span className={`availability-dot${siteInfo.availabilityColor === 'amber' ? ' amber' : ''}`} />
               {siteInfo.availabilityStatus} &middot;&nbsp;
               <span className="home-meta-location">{siteInfo.location}</span>
             </div>
