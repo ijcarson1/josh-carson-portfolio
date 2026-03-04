@@ -1,5 +1,6 @@
 import { Inter } from "next/font/google";
 import { IBM_Plex_Mono } from "next/font/google";
+import ThemeToggle from "@/components/ThemeToggle";
 import "./globals.css";
 
 const inter = Inter({
@@ -36,10 +37,32 @@ export const metadata = {
   },
 };
 
+// Inline script to prevent flash of wrong theme on load
+const themeScript = `
+(function() {
+  try {
+    var t = localStorage.getItem('theme');
+    if (t === 'dark' || t === 'light') {
+      document.documentElement.setAttribute('data-theme', t);
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  } catch(e) {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+})();
+`;
+
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className={`${inter.variable} ${ibmPlexMono.variable}`} style={{ fontFamily: "var(--font-inter), system-ui, sans-serif" }}>
+        <ThemeToggle />
         {children}
       </body>
     </html>

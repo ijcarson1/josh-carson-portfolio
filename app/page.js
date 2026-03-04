@@ -4,7 +4,8 @@ import { getSiteInfo, getProjects, getWorkImages } from "@/lib/contentful";
 export const revalidate = 60;
 import OrbAvatar from "@/components/OrbAvatar";
 import WorkSection from "@/components/WorkSection";
-import ImageCard from "@/components/ImageCard";
+import ImageLightbox from "@/components/ImageLightbox";
+import ClickableImageCard from "@/components/ClickableImageCard";
 import AnimationProvider from "@/components/AnimationProvider";
 
 export async function generateMetadata() {
@@ -101,6 +102,31 @@ export default async function HomePage() {
   const firstScreen = screenImages.length > 0 ? screenImages[0] : null;
   const remainingScreens = screenImages.slice(1);
 
+  // Build a lookup of projects by order for linking to gallery images
+  const projectsByOrder = {};
+  projects.forEach((p) => {
+    projectsByOrder[p.order] = p;
+  });
+
+  // Merge images with their linked projects (matched by order field)
+  const galleryItems = workImages.map((img) => ({
+    ...img,
+    project: projectsByOrder[img.order] || null,
+  }));
+
+  // Build display-order items matching the visual layout:
+  // 1. firstScreen, 2. componentImages, 3. remainingScreens
+  const displayOrderItems = [];
+  if (firstScreen) {
+    displayOrderItems.push(galleryItems.find((g) => g.src === firstScreen.src && g.order === firstScreen.order) || { ...firstScreen, project: null });
+  }
+  componentImages.forEach((img) => {
+    displayOrderItems.push(galleryItems.find((g) => g.src === img.src && g.order === img.order) || { ...img, project: null });
+  });
+  remainingScreens.forEach((img) => {
+    displayOrderItems.push(galleryItems.find((g) => g.src === img.src && g.order === img.order) || { ...img, project: null });
+  });
+
   return (
     <>
       <AnimationProvider />
@@ -153,27 +179,29 @@ export default async function HomePage() {
         </aside>
 
         {/* RIGHT PANEL */}
-        <section className="home-right">
-          {firstScreen && <ImageCard {...firstScreen} />}
+        <ImageLightbox items={displayOrderItems}>
+          <section className="home-right">
+            {firstScreen && <ClickableImageCard index={0} {...firstScreen} />}
 
-          {componentImages.length > 0 && (
-            <div className="home-component-grid">
-              {componentImages.map((img, i) => (
-                <ImageCard key={`comp-${i}`} {...img} />
-              ))}
+            {componentImages.length > 0 && (
+              <div className="home-component-grid">
+                {componentImages.map((img, i) => (
+                  <ClickableImageCard key={`comp-${i}`} index={1 + i} {...img} />
+                ))}
+              </div>
+            )}
+
+            {remainingScreens.map((img, i) => (
+              <ClickableImageCard key={`screen-${i}`} index={1 + componentImages.length + i} {...img} />
+            ))}
+
+            <div className="home-meta" style={{ justifyContent: "center", marginTop: "40px", marginBottom: 0 }}>
+              more work images coming soon
             </div>
-          )}
 
-          {remainingScreens.map((img, i) => (
-            <ImageCard key={`screen-${i}`} {...img} />
-          ))}
-
-          <div className="home-meta" style={{ justifyContent: "center", marginTop: "40px", marginBottom: 0 }}>
-            more work images coming soon
-          </div>
-
-          <div className="h-24" />
-        </section>
+            <div className="h-24" />
+          </section>
+        </ImageLightbox>
       </div>
     </>
   );
