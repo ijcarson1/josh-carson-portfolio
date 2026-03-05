@@ -116,6 +116,7 @@ async function run() {
         { id: "noPaddingBottom", name: "No Padding Bottom", type: "Boolean", required: false },
         { id: "crop", name: "Crop", type: "Boolean", required: false },
         { id: "order", name: "Sort Order", type: "Integer", required: true },
+        { id: "linkedProject", name: "Linked Project", type: "Link", linkType: "Entry", required: false, validations: [{ linkContentType: ["project"] }] },
       ],
     });
     const ct = await env.getContentType("workImage");

@@ -102,30 +102,13 @@ export default async function HomePage() {
   const firstScreen = screenImages.length > 0 ? screenImages[0] : null;
   const remainingScreens = screenImages.slice(1);
 
-  // Build a lookup of projects by order for linking to gallery images
-  const projectsByOrder = {};
-  projects.forEach((p) => {
-    projectsByOrder[p.order] = p;
-  });
-
-  // Merge images with their linked projects (matched by order field)
-  const galleryItems = workImages.map((img) => ({
-    ...img,
-    project: projectsByOrder[img.order] || null,
-  }));
-
   // Build display-order items matching the visual layout:
   // 1. firstScreen, 2. componentImages, 3. remainingScreens
+  // Each image already has its linked project from Contentful
   const displayOrderItems = [];
-  if (firstScreen) {
-    displayOrderItems.push(galleryItems.find((g) => g.src === firstScreen.src && g.order === firstScreen.order) || { ...firstScreen, project: null });
-  }
-  componentImages.forEach((img) => {
-    displayOrderItems.push(galleryItems.find((g) => g.src === img.src && g.order === img.order) || { ...img, project: null });
-  });
-  remainingScreens.forEach((img) => {
-    displayOrderItems.push(galleryItems.find((g) => g.src === img.src && g.order === img.order) || { ...img, project: null });
-  });
+  if (firstScreen) displayOrderItems.push(firstScreen);
+  componentImages.forEach((img) => displayOrderItems.push(img));
+  remainingScreens.forEach((img) => displayOrderItems.push(img));
 
   return (
     <>
